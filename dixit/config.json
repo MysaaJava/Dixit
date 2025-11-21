@@ -2,6 +2,10 @@
     // Port for the server to listen on.
     "port" : 8888,
 
+    // Directory containing available card sets. Path relative to python files directory
+    // If you change this, you have to serve this folder to base_url/static/cards/
+    "card_folder" : "./static/cards/",
+
     // Sets of cards available, used to build a deck for a game.
     "card_sets" : {
         // <name-of-card-set> : [static/cards/<folder>, <is-default-checked>]

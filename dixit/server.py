@@ -383,11 +383,14 @@ def has_suffix(name, suffixes):
     return True in (name.endswith(suffix) for suffix in suffixes)
 
 
-def find_cards(folder, suffixes=(".jpg", ".png")):
+def find_cards(folder, deck, suffixes=(".jpg", ".png")):
     """Returns all urls for a given folder, matching the given suffixes."""
-    path = os.path.join(os.path.dirname(__file__), display.WebPaths.CARDS, folder)
+    if folder.startswith('/'):
+        path = os.path.join(folder, deck)
+    else:
+        path = os.path.join(os.path.dirname(__file__), folder, deck)
     return [
-        url_join(display.WebPaths.CARDS, folder, name)
+        url_join(display.WebPaths.CARDS, deck, name)
         for name in os.listdir(path)
         if has_suffix(name, suffixes)
     ]
@@ -406,7 +409,7 @@ class Application(tornado.web.Application):
 
         # Specifies where to find all the card images for each set.
         self.card_sets = [
-            CardSet(name, find_cards(folder), enabled)
+            CardSet(name, find_cards(kwargs["card_folder"],folder), enabled)
             for name, (folder, enabled) in kwargs["card_sets"].items()
         ]
         self.admin_password = kwargs["admin_password"]
